@@ -143,6 +143,19 @@ commands['install'] = {
 end
 }
 
+commands['run-manifest'] = {
+  help = "Runs a manifest from the internet",
+  usage = "<manifest-url>",
+  run = function(state, args)
+  if #args == 1 then
+    state:run_manifest(args[1])
+  else
+    return 1
+  end
+
+  state:save()
+}
+
 commands['remove'] = {
   usage = '<package>[ [package]...]',
   help = [[Removes the given package(s)?
