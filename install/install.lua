@@ -1,4 +1,4 @@
-local BASE_URL = 'http://localhost/cc/ac-get'
+local BASE_URL = 'http://ac-get.darkdna.net'
 local INSTALL_SOURCE = BASE_URL .. "/install"
 local MANIFEST = BASE_URL .. "/install.manifest"
 
