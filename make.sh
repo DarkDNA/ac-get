@@ -8,7 +8,7 @@ for i in index download license; do
 done
 
 cd docs/
-for i in custom-locations index repo-format plugins; do
+for i in custom-locations index repo-format plugins install-manifests; do
 	echo "  Compiling docs/$i.md"
 	multimarkdown $i.md >$i.html
 done

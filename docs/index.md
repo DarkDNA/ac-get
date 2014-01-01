@@ -8,3 +8,4 @@ If you have any questions, please [contact me](/contact.html)
 
   * [Repository Format](/docs/repo-format.html)
   * [Custom Locations](/docs/custom-locations.html)
+  * [Installation Manifests](/docs/install-manifests.html)

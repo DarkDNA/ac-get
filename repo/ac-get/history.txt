@@ -1,3 +1,10 @@
+=== 10 ===
+* Add run-manifest command
+
+=== 9 ===
+* Misc. logging fixes.
+* Fix initial install script.
+
 === 8 ===
 * Allow multiple packages to get installed at once with `ac-get install`
 * Allow multiple packages to get removed at once with `ac-get remove`
