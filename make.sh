@@ -2,7 +2,7 @@
 
 echo "Making HTML"
 
-for i in index download; do
+for i in index download license; do
 	echo "  Compiling $i.md"
 	multimarkdown $i.md >$i.html
 done
