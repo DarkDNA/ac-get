@@ -1,14 +1,12 @@
-local BASE_URL = 'http://ac-get.darkdna.net'
+local BASE_URL = 'http://localhost/cc/ac-get'
+local INSTALL_SOURCE = BASE_URL .. "/install"
+local MANIFEST = BASE_URL .. "/install.manifest"
 
 local args = {...}
 
-if #args == 1 then
-	-- Base Repo!
-	BASE_URL = args[1]
+if args[1] then
+	MANIFEST = args[1]
 end
-
-local BASE_REPO = BASE_URL .. "/repo/"
-local INSTALL_SOURCE = BASE_URL .. "/install/"
 
 function get_url(url)
 	if http == nil then
@@ -139,8 +137,10 @@ local _, e = pcall(function()
 
 	log.add_target(print_log)
 
-	local repo = state:add_repo(BASE_REPO, 'Base ac-get repo')
-	repo:install_package('ac-get')
+	state:run_manifest(MANIFEST)
+
+	--local repo = state:add_repo(BASE_REPO, 'Base ac-get repo')
+	--repo:install_package('ac-get')
 
 	state:save()
 end)

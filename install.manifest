@@ -1,0 +1,4 @@
+Comment: This is the default ac-get installation manifest.
+Comment: All it does is install the repo for ac-get, and then install ac-get itself.
+Add-Repo: http://ac-get.darkdna.net/repo
+Install: ac-get

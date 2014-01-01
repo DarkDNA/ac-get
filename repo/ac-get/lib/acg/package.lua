@@ -167,12 +167,6 @@ end
 
 
 function Package:update()
-	local pkg = get_url(self:get_url() .. '/details.pkg');
-
-	if pkg == nil then
-		error('No such package on server.')
-	end
-
 	self.description = ""
 
 	self.dependencies = {}
@@ -194,51 +188,33 @@ function Package:update()
 		post_remove = {}
 	}
 
+	local directives = {}
 
-	for line in read_lines(pkg) do
-		local idx = line:find(': ')
+	-- Files.
 
-		if idx then
-			local name = line:sub(1, idx - 1)
-			local value = line:sub(idx + 2)
+	directives["Executable"] = function(value) table.insert(self.files['executable'], value) end
+	directives["Library"] = function(value) table.insert(self.files['library'], value) end
+	directives["Config"] = function(value) table.insert(self.files['config'], value) end
+	directives["Startup"] = function(value) table.insert(self.files['startup'], value) end
+	directives["Docs"] = function(value) table.insert(self.files['docs'], value) end
 
-			-- Files!
-			if name == 'Executable' then
-				table.insert(self.files['executable'], value)
-			elseif name == 'Library' then
-				table.insert(self.files['library'], value)
-			elseif name == 'Config' then
-				table.insert(self.files['config'], value)
-			elseif name == 'Startup' then
-				table.insert(self.files['startup'], value)
-			elseif name == 'Docs' then
-				table.insert(self.files['docs'], value)
-			-- Meta Data!
-			elseif name == 'Description' then
-				self.description = self.description .. value
-			elseif name == 'Dependency' then
-				table.insert(self.dependencies, value)
-			-- Legal Dredgery!
-			elseif name == 'License' then
-				self.license = value
-			elseif name == 'Copyright' then
-				self.copyright = value
-			-- Install Scripts!
-			elseif name == 'Pre-Install' then
-				table.insert(self.steps.pre_install, value)
-			elseif name == 'Post-Install' then
-				table.insert(self.steps.post_install, value)
-			elseif name == 'Pre-Upgrade' then
-				table.insert(self.steps.pre_upgrade, value)
-			elseif name == 'Post-Upgrade' then
-				table.insert(self.steps.post_upgrade, value)
-			elseif name == 'Pre-Remove' then
-				table.insert(self.steps.pre_remove, value)
-			elseif name == 'Post-Remove' then
-				table.insert(self.steps.post_remove, value)
-			end
-		end
-	end
+	-- Meta Data!
+
+	directives["Description"] = function(value) self.description = self.description .. value end
+	directives["Dependency"] = function(value) table.insert(self.dependencies, value) end
+	directives["License"] = function(value) self.license = value end
+	directives["Copyright"] = function(value) self.copyright = value end
+
+	-- Cycle hooks!
+
+	directives["Pre-Install"] = function(value) table.insert(self.steps.pre_install, value) end
+	directives["Post-Install"] = function(value) table.insert(self.steps.post_install, value) end
+	directives["Pre-Upgrade"] = function(value) table.insert(self.steps.pre_upgrade, value) end
+	directives["Post-Upgrade"] = function(value) table.insert(self.steps.post_upgrade, value) end
+	directives["Pre-Remove"] = function(value) table.insert(self.steps.pre_remove, value) end
+	directives["Post-Remove"] = function(value) table.insert(self.steps.post_remove, value) end
+
+	parse_manifest(self:get_url() .. '/details.pkg', directives)
 
 	if self.short_desc == "" then
 		self.short_desc = self.description:sub(0, 30)

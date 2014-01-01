@@ -15,7 +15,6 @@ function State:init()
 end
 
 function State:add_repo(url, desc)
-	-- TODO: Repo Checking! :D
 
 	local repo = new(Repo, self, url, desc)
 	repo.hash = self:new_repo_hash()
@@ -25,6 +24,17 @@ function State:add_repo(url, desc)
 	repo:update()
 
 	return repo
+end
+
+-- Runs the manifest from the given URL
+function State:run_manifest(url)
+	local directives = {}
+
+	directives["Add-Repo"] = function(val) self:add_repo(val) end
+	directives["Install"] = function(val) self:install(val) end
+	directives["Run-Manifest"] = function(val) self:run_manifest(val) end
+
+	parse_manifest(url, directives)
 end
 
 function State:new_repo_hash()
