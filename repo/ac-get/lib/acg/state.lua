@@ -15,6 +15,13 @@ function State:init()
 end
 
 function State:add_repo(url, desc)
+	-- Duplicate checking
+	for hash, r in pairs(self.repos) do
+		if r.url == url then
+			r:update()
+			return r
+		end
+	end
 
 	local repo = new(Repo, self, url, desc)
 	repo.hash = self:new_repo_hash()
