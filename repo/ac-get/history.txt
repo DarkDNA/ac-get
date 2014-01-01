@@ -1,0 +1,21 @@
+=== 8 ===
+* Allow multiple packages to get installed at once with `ac-get install`
+* Allow multiple packages to get removed at once with `ac-get remove`
+* Make failure to install/remove packages specify the failed package
+* Add task & progress reporting to the base library, and clean up the base program's output
+
+=== 7 ===
+* Fix statup scripts (again.)
+
+=== 6 ===
+* Fix ac-get list installed
+* Change startup code to table.sort the list before running things.
+* Fix it so startup scripts can't break all of startup
+
+=== 5 ===
+* Package History file for repo managers.
+* ac-get history command
+* some basic cleanups of the package class.
+
+=== 4 ===
+* BUG: Fix problem with orphaned packages and ac-get update

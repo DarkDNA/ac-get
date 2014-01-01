@@ -1,0 +1,5 @@
+Name: Example Program
+Description: A simple example program, It's name is frank.
+Dependency: lib-example
+Executable: foo-example
+Config: foo-example.txt => foo-example

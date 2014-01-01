@@ -1,0 +1,18 @@
+Name: ac-get
+Description: Pulls down packages from LE INTERNET!
+Version: 1
+Executable: ac-get
+Library: acg/
+Library: acg/acg
+Library: acg/classes
+Library: acg/utils
+Library: acg/state
+Library: acg/repo
+Library: acg/package
+Library: acg/log
+Library: acg/task
+Post-Install: add-startup
+Post-Upgrade: upgrade-startup
+Startup: 00-add-paths
+License: MIT License
+Copyright: CC-by-2.0 Attribution

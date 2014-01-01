@@ -1,0 +1,3 @@
+Name: Example Startup
+Description: An example startup directive. Hir name is Steve.
+Startup: foo-example
