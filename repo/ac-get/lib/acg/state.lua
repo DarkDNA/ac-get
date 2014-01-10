@@ -30,6 +30,8 @@ function State:add_repo(url, desc)
 
 	repo:update()
 
+	log.verbose("state", "Added repo " .. url)
+
 	return repo
 end
 
@@ -57,22 +59,22 @@ function State:install(pkg_name)
 		if pkg_obj ~= nil then
 			self:do_install_package(pkg_obj)
 
-			return
+			return true, "Package installed."
 		end
 	end
 
-	error('No repo provides package "' .. pkg_name .. '"', 2)
+	return false, 'No repo provides package "' .. pkg_name .. '"'
 end
 
 function State:remove(pkg_name)
 	for _, pkg in ipairs(self.installed) do
 		if pkg.name == pkg_name then
 			self:do_remove_package(pkg.repo:get_package(pkg_name))
-			return
+			return true, "Package Removed."
 		end
 	end
 
-	error('Package "' .. pkg_name .. '" is not installed.', 2)
+	return false, 'Package "' .. pkg_name .. '" is not installed.'
 end
 
 function State:do_install_package(pkg)
@@ -154,6 +156,8 @@ function State:get_installed(pkg_name)
 end
 
 function State:save()
+	log.verbose("state::save", "Saving state...")
+
 	local f = fs.open(dirs["repo-state"] .. "/index", "w")
 
 	f.write(VERSION .. "\n")
@@ -325,7 +329,7 @@ function load_state()
 	local f = fs.open(dirs['repo-state'] .. '/index', 'r')
 
 	if tonumber(f.readLine()) > VERSION then
-		error('State files too new?')
+		log.critical("state::load", 'State files too new?')
 	end
 
 	state.repo_hash = tonumber(f.readLine())

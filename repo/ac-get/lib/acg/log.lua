@@ -1,6 +1,5 @@
 log = {}
 
-
 CRITICAL = 1
 ERROR = 2
 WARNING = 3
@@ -49,4 +48,20 @@ end
 
 function log.critical(name, ...)
 	do_log(name, CRITICAL, ...)
+end
+
+-- Logger Object.
+
+Logger = {}
+
+function Logger:init(name)
+	self.name = name
+
+	for k, v in pairs(log) do
+		if k ~= "add_target" then
+			self[k] = function(self, ...)
+				v(self.name, ...)
+			end
+		end
+	end
 end

@@ -1,5 +1,6 @@
 === 10 ===
 * Add run-manifest command
+* Add more logging to various places.
 
 === 9 ===
 * Misc. logging fixes.

@@ -3,6 +3,8 @@ Package = {}
 -- Packages represent both a server-package as well as a
 -- package entry in the installed table.
 function Package:init(repo, name)
+	self.log = new(Logger, "package::" .. repo.hash .. "::" .. name)
+
 	self.repo = repo
 
 	self.files = {
@@ -41,6 +43,8 @@ end
 function Package:install(state)
 	local pkg = self
 
+	self.log:debug("Installing...")
+
 	local task = state:begin_task("install-" .. pkg.name, 0)
 
 	local function install_all(type, files, path, ext)
@@ -49,7 +53,8 @@ function Package:install(state)
 		task.steps = task.steps + #files
 
 		for i, file in ipairs(files) do
-			-- print("Installing " .. file)
+			self.log:info("Installing " .. file)
+
 			task:update("Installing " .. file, start + i)
 
 			state:pull_file(pkg, type, 
@@ -65,13 +70,16 @@ function Package:install(state)
 
 		for i, file in ipairs(files) do
 			if file:sub(-1) == '/' then
+				self.log:info("Creating directory " .. file)
+
 				task:update("Creating " .. file, start + i)
 				
 				state:make_dir(pkg, type, file)
 			else
 				local source, dest = pkg:parse_dest(file)
 		
-				--print("Installing " .. dest)
+				self.log:info("Installing file " .. dest)
+
 				task:update("Installing " .. dest, start + i)
 
 				state:pull_file(pkg, type,
@@ -94,6 +102,8 @@ end
 function Package:remove( state )
 	local pkg = self
 
+	self.log:debug("Uninstalling")
+
 	local task = state:begin_task("remove-" .. pkg.name, 1)
 
 	local function remove_all(type, files, path, ext)
@@ -101,6 +111,8 @@ function Package:remove( state )
 		task.steps = task.steps + #files
 
 		for i, file in ipairs(files) do
+			self.log:info("Removing file " .. file)
+
 			task:update("Removing " .. file, start + i)
 			state:remove_file(type, file)
 		end
@@ -112,11 +124,15 @@ function Package:remove( state )
 		task.steps = task.steps + #files
 		for i, file in ipairs(files) do
 			if file:sub(-1) == '/' then
+				self.log:info("Removing directory " .. file)
+
 				task:update("Removing " .. file, start + i)
 
 				state:remove_dir(type, file)
 			else
 				local source, dest = pkg:parse_dest(file)
+
+				self.log:info("Removing file " .. file)
 
 				task:update("Removing " .. file, start + i)
 
@@ -136,13 +152,14 @@ function Package:remove( state )
 end
 
 function Package:run_step(state, step, ...)
-	log.verbose('package::' .. step, 'Beginning...')
+	--log.verbose('package::' .. step, 'Beginning...')
+	self.log:verbose("Beginning Step " .. step)
 	
 	for _, script in ipairs(self.steps[step]) do
 		local scr = get_url_safe(self.repo.url .. "/" .. self.name .. "/steps/" .. step .. "/" .. script .. ".lua")
 
 		if not scr then
-			log.error("package::" .. step, "Step script missing: " .. step .. "/" .. script )
+			self.log:error("Step script missing: " .. step .. "/" .. script )
 		else
 			local f = loadstring(scr.readAll(), self.name .. '-' .. step .. "-" .. script)
 
@@ -159,7 +176,7 @@ function Package:run_step(state, step, ...)
 			local ok, err = pcall(f, ...)
 
 			if not ok then
-				log.error("package::" .. step, err)
+				self.log:error("Error running step " .. step .. "/" .. script .. ": " .. err)
 			end
 		end
 	end

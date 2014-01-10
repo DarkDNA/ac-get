@@ -37,7 +37,7 @@ end
 
 function Repo:save()
 	if self.hash == nil then
-		log.critical("Repo is in an invalid state", 1)
+		log.critical("repo::unknown::save", "Repo is in an invalid state", 1)
 	end
 
 	local f = fs.open(dirs['repo-state'] .. '/' .. self.hash .. '-pkgs', 'w')
@@ -85,6 +85,8 @@ function Repo:update()
 		local pkg = new(Package, self, pkg_name)
 
 		local idx2 = line:find('::', idx + 2)
+
+		log.verbose("repo::" .. self.hash .. "::update", "Got Package " .. pkg_name)
 
 		if idx2 then
 			pkg.version = tonumber(line:sub(idx + 2, idx2 - 1))
