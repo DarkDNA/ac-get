@@ -82,8 +82,13 @@ function State:do_install_package(pkg)
 
 	local inst_pkg = self:get_installed(pkg.name)
 
+	if inst_pkg and inst_pkg.version >= pkg.version and not pkg.repo.dev_mode then
+		log.verbose("state::do_install_package", "Package is already installed.")
+		return
+	end
+
 	for _, dep in ipairs(pkg.dependencies) do
-		self:install(dep)
+		local ok, err = self:install(dep)
 	end
 
 	if inst_pkg then

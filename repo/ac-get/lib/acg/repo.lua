@@ -7,6 +7,7 @@ function Repo:init(state, url, desc)
 
 	self.url = url
 	self.desc = desc
+	self.dev_mode = false
 
 	self.packages = {}
 end
@@ -118,6 +119,8 @@ function Repo:load()
 	f = fs.open(dirs['repo-state'] .. '/' .. self.hash .. '-desc', 'r')
 
 	self.desc = f.readAll()
+
+	self.dev_mode = fs.exists(dirs['repo-state'] .. '/' .. self.hash .. '-dev_mode')
 
 	f.close()
 end

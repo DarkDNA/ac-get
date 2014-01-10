@@ -133,7 +133,10 @@ commands['install'] = {
   run = function(state, args)
   if #args > 0 then
     for _, pkg in ipairs(args) do
-      state:install(pkg)
+      local ok, err = state:install(pkg)
+      if not ok then
+        printError("Failed to install " .. pkg .. ": " .. err)
+      end
     end
   else
     return 1
@@ -171,7 +174,9 @@ the changes that it will make.]],
   end
 
   for _, pkg in ipairs(args) do
-    state:remove(pkg)
+    local ok, err = state:remove(pkg)
+    if not ok then
+      printError("Failed to remove " .. pkg .. ": " .. err)
   end
 
   state:save()
