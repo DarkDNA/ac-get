@@ -53,7 +53,7 @@ function Package:install(state)
 		task.steps = task.steps + #files
 
 		for i, file in ipairs(files) do
-			self.log:info("Installing " .. file)
+			self.log:verbose("Installing " .. file)
 
 			task:update("Installing " .. file, start + i)
 
@@ -70,7 +70,7 @@ function Package:install(state)
 
 		for i, file in ipairs(files) do
 			if file:sub(-1) == '/' then
-				self.log:info("Creating directory " .. file)
+				self.log:verbose("Creating directory " .. file)
 
 				task:update("Creating " .. file, start + i)
 				
@@ -78,7 +78,7 @@ function Package:install(state)
 			else
 				local source, dest = pkg:parse_dest(file)
 		
-				self.log:info("Installing file " .. dest)
+				self.log:verbose("Installing file " .. dest)
 
 				task:update("Installing " .. dest, start + i)
 
@@ -111,7 +111,7 @@ function Package:remove( state )
 		task.steps = task.steps + #files
 
 		for i, file in ipairs(files) do
-			self.log:info("Removing file " .. file)
+			self.log:verbose("Removing file " .. file)
 
 			task:update("Removing " .. file, start + i)
 			state:remove_file(type, file)
@@ -124,7 +124,7 @@ function Package:remove( state )
 		task.steps = task.steps + #files
 		for i, file in ipairs(files) do
 			if file:sub(-1) == '/' then
-				self.log:info("Removing directory " .. file)
+				self.log:verbose("Removing directory " .. file)
 
 				task:update("Removing " .. file, start + i)
 
@@ -132,7 +132,7 @@ function Package:remove( state )
 			else
 				local source, dest = pkg:parse_dest(file)
 
-				self.log:info("Removing file " .. file)
+				self.log:verbose("Removing file " .. file)
 
 				task:update("Removing " .. file, start + i)
 

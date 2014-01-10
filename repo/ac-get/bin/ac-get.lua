@@ -157,6 +157,7 @@ commands['run-manifest'] = {
   end
 
   state:save()
+end
 }
 
 commands['remove'] = {
@@ -177,6 +178,7 @@ the changes that it will make.]],
     local ok, err = state:remove(pkg)
     if not ok then
       printError("Failed to remove " .. pkg .. ": " .. err)
+    end
   end
 
   state:save()
