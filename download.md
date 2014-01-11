@@ -10,7 +10,15 @@ You can get ac-get by using any wget-alike program, just point it at `http://ac-
 
 You can also get ac-get by using [Oddstr13's bootstrapper](http://pastebin.com/AgZXgrb8) . This has the advantage of being on pastebin, so you don't need to use any other program to get access to ac-get. His program downloads, and runs, the offical installer, so it is just a matter of preference.
 
-You can get it like this:
+## ComputerCraft 1.55 and newer. ##
+
+You can install ac-get using the `run` pastebin subcommand.
+
+	> pastebin run AgZXgrb8
+
+## Older ComputerCraft versions ##
+
+Older versions of ComputerCraft don't have the `run` subcommand for the `pastebin` command, so you need to save it as a temporary file.
 
 	> pastebin get AgZXgrb8 /ac-get-setup
-	> /ac-get-startup
+	> /ac-get-setup
