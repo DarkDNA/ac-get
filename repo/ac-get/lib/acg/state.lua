@@ -57,9 +57,7 @@ function State:install(pkg_name)
 		local pkg_obj = repo:get_package(pkg_name)
 
 		if pkg_obj ~= nil then
-			self:do_install_package(pkg_obj)
-
-			return true, "Package installed."
+			return self:do_install_package(pkg_obj)
 		end
 	end
 
@@ -69,8 +67,7 @@ end
 function State:remove(pkg_name)
 	for _, pkg in ipairs(self.installed) do
 		if pkg.name == pkg_name then
-			self:do_remove_package(pkg.repo:get_package(pkg_name))
-			return true, "Package Removed."
+			return self:do_remove_package(pkg.repo:get_package(pkg_name))
 		end
 	end
 
@@ -83,12 +80,17 @@ function State:do_install_package(pkg)
 	local inst_pkg = self:get_installed(pkg.name)
 
 	if inst_pkg and inst_pkg.version >= pkg.version and not pkg.repo.dev_mode then
-		log.verbose("state::do_install_package", "Package is already installed.")
-		return
+		log.verbose("state::do_install_package", "Package '" .. pkg.name .. "' is already installed.")
+
+		return true, "Package already installed."
 	end
 
 	for _, dep in ipairs(pkg.dependencies) do
 		local ok, err = self:install(dep)
+
+		if not ok then
+			return false, "Error in dependency '" .. dep .. "': " .. err
+		end
 	end
 
 	if inst_pkg then
@@ -106,6 +108,8 @@ function State:do_install_package(pkg)
 	end
 
 	self:mark_installed(pkg)
+
+	return true, "Package Installed."
 end
 
 
@@ -115,6 +119,8 @@ function State:do_remove_package(pkg)
 	pkg:run_step(self, "post_remove")
 
 	self:mark_removed(pkg)
+
+	return true, "Package Removed"
 end
 
 function State:mark_installed(pkg)
