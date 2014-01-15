@@ -17,6 +17,11 @@ function Task:update(detail, prog)
   self.state:call_hook("task_update", self.id, detail, prog, self.steps)
 end
 
+function Task:error(detail)
+  self.state:call_hook("task_error", self.id, detail)
+  self.log:error("Task Errored")
+end
+
 function Task:done(detail)
   self.state:call_hook("task_complete", self.id, detail or "")
   self.log:verbose("Task Complete")

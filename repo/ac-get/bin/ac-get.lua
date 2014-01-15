@@ -531,6 +531,35 @@ state:hook("task_complete", function(id, detail)
   print()
 end)
 
+state:hook("task_error", function(id, detail)
+  local txt = "Error"
+
+  if detail ~= "" then
+    term.setCursorPos(x, y)
+    term.clearLine()
+
+    if #detail > w - #txt - 1 then
+      detail = detail:sub(1, w - #txt - 4) .. "..."
+    end
+
+    term.write(detail)
+  end
+
+  term.setCursorPos(w - #txt + 1, y)
+
+  if term.isColour() then
+    term.setTextColour(colours.red)
+  end
+
+  term.write(txt)
+
+  if term.isColour() then
+    term.setTextColour(colours.white)
+  end
+  
+  print()
+end)
+
 local command = table.remove(args, 1)
 
 local ok, err = pcall(function()

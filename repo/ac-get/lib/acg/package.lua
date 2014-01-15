@@ -89,14 +89,24 @@ function Package:install(state)
 		end
 	end
 
-	install_all('binaries', self.files['executable'], 'bin', '.lua')
-	install_all('startup', self.files['startup'], 'startup', '.lua')
-	install_all('docs', self.files['docs'], 'docs', '.txt')
+	local ok, err = pcall(function()
+		install_all('binaries', self.files['executable'], 'bin', '.lua')
+		install_all('startup', self.files['startup'], 'startup', '.lua')
+		install_all('docs', self.files['docs'], 'docs', '.txt')
 
-	install_all_spec('libraries', self.files['library'], 'lib', '.lua')
-	install_all_spec('config', self.files['config'], 'cfg', '')
+		install_all_spec('libraries', self.files['library'], 'lib', '.lua')
+		install_all_spec('config', self.files['config'], 'cfg', '')
 
-	task:done("Installed " .. pkg.name)
+		task:done("Installed " .. pkg.name)
+	end)
+
+	if not ok then
+		self.log:error("Error installing: " .. err)
+
+		task:error("Installing " .. pkg.name)
+	end
+
+	return ok
 end
 
 function Package:remove( state )

@@ -3,6 +3,7 @@
 * Add more logging to various places.
 * Add per-repo dev mode, which causes ac-get to always install packages, even if already installed.
 * No-longer blindly re-installs already installed packages ( Bar the above exception. )
+* Better install error handling and reporting.
 
 === 9 ===
 * Misc. logging fixes.

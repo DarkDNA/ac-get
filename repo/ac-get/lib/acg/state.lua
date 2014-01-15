@@ -9,6 +9,7 @@ function State:init()
 		task_begin = {},
 		task_update = {},
 		task_complete = {},
+		task_error = {},
 	}
 
 	self.repo_hash = 0
@@ -99,7 +100,11 @@ function State:do_install_package(pkg)
 		pkg:run_step(self, "pre_install")
 	end
 
-	pkg:install(self)
+	if not pkg:install(self) then
+		pkg:remove(self)
+		
+		return false, "Error installing package."
+	end
 
 	if inst_pkg then
 		pkg:run_step(self, "post_upgrade", inst_pkg.version, pkg.version)
