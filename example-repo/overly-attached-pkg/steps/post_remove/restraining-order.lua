@@ -1,1 +1,0 @@
-print("They said I can't go near you, so I'll email you 40 times a day ok?")

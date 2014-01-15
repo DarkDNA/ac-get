@@ -1,1 +1,0 @@
-This is the main repo for the ac-get package manager. It doesn't have anything other than ac-get itself, though.

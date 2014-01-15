@@ -1,9 +1,0 @@
-Name: Overly Attached Package
-Description: I'll always love you!
-Docs: love
-Pre-Install: love
-Post-Install: cuddles
-Pre-Upgrade: clothes
-Post-Upgrade: wedding
-Pre-Remove: why
-Post-Remove: restraining-order
