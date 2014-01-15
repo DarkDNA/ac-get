@@ -1,0 +1,2 @@
+Description: An invalid package to test the error handling of ac-get version 10.
+Executable: foo-bar-bacon
