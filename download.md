@@ -22,3 +22,8 @@ Older versions of ComputerCraft don't have the `run` subcommand for the `pastebi
 
 	> pastebin get AgZXgrb8 /ac-get-setup
 	> /ac-get-setup
+
+
+# Where's the sauce!? #
+
+ac-get is now an open-source program, allowing for community contributions. You can get the source from [the GitLab setup](https://git.darkdna.net/amanda/ac-get) and submit patches to [the mailing list](https://lists.darkdna.net/info/acg-devel).
