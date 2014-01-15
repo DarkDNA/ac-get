@@ -1,6 +1,5 @@
 Name: ac-get
 Description: Pulls down packages from LE INTERNET!
-Version: 1
 Executable: ac-get
 Library: acg/
 Library: acg/acg
