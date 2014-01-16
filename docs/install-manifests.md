@@ -1,5 +1,7 @@
 # What are these? #
 
+*Install manifests are only available on ac-get version 10 and up.*
+
 Install manifests are a series of commands for ac-get to run. They are in the same format as the details.pkg file in a repo. There are currently only three directives available, listed below. They can be chain-loaded, allowing you to compartamentalise your manifests for your repos. The manifests do *not* have to be inside a repository's folder structure, but they *may* be.
 
 # Directives?! #
