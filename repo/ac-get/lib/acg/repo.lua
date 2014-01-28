@@ -46,7 +46,7 @@ function Repo:save()
 	f.write(VERSION .. '\n')
 
 	for _, pkg in ipairs(self.packages) do
-		f.write(textutils.serialize(pkg:details()) .. '\n')
+		f.write(serialise_table(pkg:details()) .. '\n')
 	end
 
 	f.close()
