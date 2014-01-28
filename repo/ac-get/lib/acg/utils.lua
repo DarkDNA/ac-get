@@ -79,7 +79,7 @@ end
 	end
 end
 
-function serialize_table( t )
+function serialise_table( t )
 	local tTracking = {}
 	return serializeImpl( t, tTracking )
 end
