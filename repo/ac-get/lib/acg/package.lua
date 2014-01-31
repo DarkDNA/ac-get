@@ -37,7 +37,7 @@ function Package:init(repo, name)
 end
 
 function Package:get_url()
-	return self.repo.url .. '/' .. self.name .. '/'
+	return self.repo.url .. '/' .. self.name
 end
 
 function Package:install(state)
