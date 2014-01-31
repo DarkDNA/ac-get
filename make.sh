@@ -2,7 +2,7 @@
 
 echo "Making HTML"
 
-for i in index download license; do
+for i in index download license beta-tester; do
 	echo "  Compiling $i.md"
 	multimarkdown $i.md >$i.html
 done
@@ -15,4 +15,10 @@ done
 
 cd ../
 
-zip example-repo.zip -r example-repo/
+cd ../stable/
+
+zip -r example-repo.zip example-repo
+
+cd ../beta
+
+zip -r example-repo.zip example-repo
