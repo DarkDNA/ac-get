@@ -146,6 +146,33 @@ commands['install'] = {
 end
 }
 
+commands['reinstall'] = {
+  help = "Reinstalls the given packages.",
+  usage = "<package>[ package...]",
+  run = function(state, args)
+  if #args > 0 then
+    for _, pkg in ipairs(args) do
+      -- TODO: Error checking?
+      local ok, err = state:remove(pkg)
+
+      if not ok then
+        printError("Error removing " .. pkg .. ": " .. err)
+      else
+        ok, err = state:install(pkg)
+
+        if not ok then
+          printError("Error installing " .. pkg .. ": " .. err)
+        end
+      end
+    end
+  else
+    return 1
+  end
+
+  state:save()
+end
+}
+
 commands['run-manifest'] = {
   help = "Runs a manifest from the internet",
   usage = "<manifest-url>",
