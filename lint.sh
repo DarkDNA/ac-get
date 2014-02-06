@@ -1,3 +1,3 @@
 #!/bin/bash
 
-find /var/www/cc.amanda.camnet/ac-get/ -name '*.lua' -exec luac -p {} \;
+find "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" -name '*.lua' -exec luac -p {} \;
