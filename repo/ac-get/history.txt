@@ -4,6 +4,7 @@
 * Add per-repo dev mode, which causes ac-get to always install packages, even if already installed.
 * No-longer blindly re-installs already installed packages ( Bar the above exception. )
 * Better install error handling and reporting.
+* `ac-get reinstall` command to remove then re-add a package.
 
 === 9 ===
 * Misc. logging fixes.
