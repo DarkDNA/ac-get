@@ -59,7 +59,7 @@ function Package:install(state)
 
 			state:pull_file(pkg, type, 
 				file,
-				pkg:get_url() .. path .. '/' .. file .. ext)
+				pkg:get_url() .. '/' .. path .. '/' .. file .. ext)
 		end
 	end
 
@@ -84,7 +84,7 @@ function Package:install(state)
 
 				state:pull_file(pkg, type,
 					dest,
-					pkg:get_url() .. path .. '/' .. source .. ext)
+					pkg:get_url() .. '/' .. path .. '/' .. source .. ext)
 			end
 		end
 	end
