@@ -218,7 +218,7 @@ commands['help'] = {
   run = function(state, args)
 
   if #args == 0 then
-    print('Usage: ' .. acg.dirs['binaries'] .. '/ac-gets <command> [command-args]')
+    print('Usage: ' .. acg.dirs['binaries'] .. '/ac-get <command> [command-args]')
     print()
 
     print('Commands:')
