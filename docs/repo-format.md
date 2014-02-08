@@ -48,7 +48,7 @@ history.txt is a purely human-consumed file for package update history, it works
 
 ## details.pkg ##
 
-The details.pkg contains the meta-information of a package, as well as instructions for ac-get to install it.
+The details.pkg contains the meta-information of a package, as well as the directives for ac-get to install it, the directives are listed below.
 
 In our example repository, we'd have this for the foo/details.pkg:
 
@@ -67,8 +67,8 @@ The following directives are supported and parsed:
 | Name | Type | Desc |
 |------|------|------|
 | Description |  Human-Readable string |  The description of the package. |
-| Library | File Spec | A library contained in the package. the file that it referenced must be under the lib/ subdirectory. |
-| Executable | File Name | A program contained in the package. The file that it references must be under the bin/ sub-directory of the package's directory. |
+| Library | File Spec | A library contained in the package. the file that it referenced must be under the lib/ subdirectory and have a `.lua` extension. |
+| Executable | File Name | A program contained in the package. The file that it references must be under the bin/ sub-directory of the package's directory. and have a `.lua` extension. |
 | Config | File Spec | A config file in the package. The file that it references must be under the cfg/ sub-directory of the package directory. |
 | Startup | File Name | A startup script to run on system boot. Must be in the startup/ subdirectory, and have the extension `.lua`|
 | Documentation | File Name | A file for documentation. Must be in the package's docs/ sub-directory and must have the extension `.txt` |
@@ -81,10 +81,10 @@ The following are under consideration for addition, and there's no harm in using
 | Author | HR-String | The author of the package. |
 | Name | HR-String | A human-readable version of the package name |
 
-## Script Directives ##
-Script Directives are run at speffic steps in the package's life-cycle. In order to do things that normally the install/remove/upgrade cycle can't. The ac-get package itself uses this for installing the startup script launcher.
+### Script Directives ###
+Script Directives are run at specific steps in the package's life-cycle. In order to do things that normally the install/remove/upgrade cycle can't. The ac-get package itself uses this for installing the startup script launcher. These are to be placed in the details.pkg alondside the above directives. The scripts themselves all go inside their respective directive names in the `steps` sub-directory,  with the `-` replaced with a `_` and the name made all-lowercase. For instance, a Pre-Install directive's script would go under `steps/pre_install/foo-script.lua`.
 
-Examples of these can be seen in the `overly-attached-pkg` package in the above example repo download.
+Examples of these can be seen in the `overly-attached-pkg` package in the above example repo download. 
 
 | Name |Args | Desc |
 |------|-----|------|
