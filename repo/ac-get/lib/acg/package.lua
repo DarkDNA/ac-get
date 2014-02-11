@@ -106,7 +106,7 @@ function Package:install(state)
 		task:error("Installing " .. pkg.name)
 	end
 
-	return ok
+	return ok, err
 end
 
 function Package:remove( state )

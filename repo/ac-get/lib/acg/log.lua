@@ -10,10 +10,22 @@ VERBOSE = 5
 log.levels = {
 }
 
+log.default_level = CRITICAL
+
 local targets = {}
 
+local function get_level(name)
+	for k, lvl in pairs(log.levels) do
+		if name:match(k) then
+			return lvl
+		end
+	end
+
+	return log.default_level
+end
+
 local function do_log(name, level, ...)
-	local lvl = log.levels[name] or CRITICAL
+	local lvl = get_level(name)
 
 	if level <= lvl then
 		for _, target in ipairs(targets) do
