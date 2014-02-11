@@ -1,0 +1,2 @@
+Description: Logging target for ac-get
+Library: file-logger => acg/zzz-file-logger
