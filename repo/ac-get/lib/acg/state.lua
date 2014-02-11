@@ -100,10 +100,12 @@ function State:do_install_package(pkg)
 		pkg:run_step(self, "pre_install")
 	end
 
-	if not pkg:install(self) then
+	local ok, err = pkg:install(self)
+
+	if not ok then
 		pkg:remove(self)
 		
-		return false, "Error installing package."
+		return false, "Error installing " .. pkg.name .. ": " .. err
 	end
 
 	if inst_pkg then
@@ -145,7 +147,7 @@ end
 
 function State:mark_removed(pkg)
 	self:get_package(pkg.name).state = "removed"
-	
+
 	for i, i_pkg in ipairs(self.installed) do
 		if i_pkg.name == pkg.name then
 			table.remove(self.installed, i)
@@ -196,6 +198,8 @@ function State:save()
 	end
 
 	f.close()
+
+	log.verbose("state::save", "Done.")
 end
 
 -- State Manupulation Functions
@@ -340,6 +344,8 @@ end
 -- Loading Function
 
 function load_state()
+	log.verbose("state::load", "Loading State...")
+
 	local state = new(State)
 
 	local f = fs.open(dirs['repo-state'] .. '/index', 'r')
@@ -351,6 +357,8 @@ function load_state()
 	state.repo_hash = tonumber(f.readLine())
 
 	local repos = {}
+
+	log.verbose("state::load", "Loading Repos")
 
 	for line in read_lines(f) do
 		local id = line:match('([0-9]+)::')
@@ -366,6 +374,8 @@ function load_state()
 	end
 
 	f.close()
+
+	log.verbose("state::load", "Loading Installed Packages")
 
 	f = fs.open(dirs['state'] .. '/installed', 'r')
 
@@ -385,6 +395,8 @@ function load_state()
 
 		table.insert(state.installed, pkg)
 	end
+
+	log.verbose("state::load", "Done.")
 
 	return state
 end
