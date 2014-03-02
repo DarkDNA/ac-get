@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<title>{{.Title}} &laquo; Documentation &laquo; ac-get</title>
+		{{ template "chrome/head.html" . }}
+	</head>
+	<body>
+		{{ template "chrome/header.html" . }}
+		{{ template "chrome/menu.html" . }}
+		<div id="content">
+			<!-- TOC Begin -->
+			{{ .TableOfContents }}
+			<!-- Preamble. -->
+			{{ if .Params.v_added }}
+				<i>This was added in version {{.Params.v_added}}</i>
+			{{ end }}
+			<!-- Content Begin -->
+			<div data-version="{{.Params.v_added}}">
+				{{.Content}}
+			</div>
+		</div>
+		{{ template "chrome/footer.html" . }}
+	</body>
+</html>

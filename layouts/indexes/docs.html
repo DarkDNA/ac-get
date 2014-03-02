@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<title>Documentation &laquo; ac-get</title>
+		{{ template "chrome/head.html" . }}
+	</head>
+	<body>
+		{{ template "chrome/header.html" . }}
+		{{ template "chrome/menu.html" . }}
+		<div id="content">
+			This is the documentation for ac-get. For further help, please <a href="/contact.html">Contact Us</a>.
+			<ul>
+			{{ range .Data.Pages }}
+				<li data-version="{{.Params.v_added}}"><a href="{{.RelPermalink}}">{{.LinkTitle}}</a></li>
+			{{ end }}
+			</ul>
+		</div>
+	</body>
+</html>

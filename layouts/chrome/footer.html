@@ -1,0 +1,25 @@
+<div id="footer">
+</div>
+
+<script type="text/javascript">
+	function update() {
+		var val = $("#doc-version").val()
+		$("[data-version]").each(function(_, v) {
+			if($(v).data("version") > val) {
+				$(v).addClass("doc-disabled");
+			} else {
+				$(v).removeClass("doc-disabled");
+			}
+		})
+	}
+
+	$("#doc-version").on("change", function() {
+		$.cookie('doc-version', $("#doc-version").val(), { 'path': '/' });
+		update();
+	})
+
+	if($.cookie("doc-version")) {
+		$("#doc-version").val($.cookie("doc-version"))
+		update();
+	}
+</script>
