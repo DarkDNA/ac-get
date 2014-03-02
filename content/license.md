@@ -1,3 +1,7 @@
+---
+title: Open Source License
+---
+
 # License! #
 
 While I normally don't like to license my stuff, I have been told this is basically a suicide wish for any project, so I have chosen to use the MIT license for this project.

@@ -1,4 +1,7 @@
-Title: ac-get » Documentation » Repository Format
+---
+title: Repository Format
+groups: [ "docs" ]
+---
 
 # Overview #
 Since some people learn by example better than RTFMing, I've made an example repository available [here](/example-repo.zip)

@@ -1,6 +1,8 @@
-Title: ac-get » Downloads
+---
+title: Download
+---
 
-You have two download options, listed below:
+You have two download options to download ac-get, listed below:
 
 # wget-alike #
 

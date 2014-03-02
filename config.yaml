@@ -1,0 +1,5 @@
+uglyurls: true
+canonifyurls: false
+indexes:
+  tag: 'tags'
+  group: 'groups'
