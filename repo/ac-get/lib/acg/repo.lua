@@ -1,5 +1,12 @@
 Repo = {}
 
+Repo.plugins = new(PluginRegistry, {
+	init = function() end,
+	update = function() end,
+	load = function() end,
+	save = function() end,
+})
+
 function Repo:init(state, url, desc)
 	self.hash = nil
 
@@ -121,6 +128,10 @@ function Repo:load()
 	self.desc = f.readAll()
 
 	self.dev_mode = fs.exists(dirs['repo-state'] .. '/' .. self.hash .. '-dev_mode')
+
+	for _, plugin in Repo.plugins:iter() do
+		plugin.load(self)
+	end
 
 	f.close()
 end

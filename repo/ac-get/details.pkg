@@ -10,6 +10,8 @@ Library: acg/repo
 Library: acg/package
 Library: acg/log
 Library: acg/task
+Library: acg/plugin-registry
+Library: acg/plugins/
 Post-Install: add-startup
 Post-Upgrade: upgrade-startup
 Startup: 00-add-paths

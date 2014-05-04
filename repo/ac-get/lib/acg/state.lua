@@ -1,5 +1,10 @@
 State = {}
 
+State.plugins = new(PluginRegistry, {
+	load = function() end,
+	save = function() end,
+})
+
 function State:init()
 	self.repos = {}
 	self.installed = {}
@@ -199,6 +204,12 @@ function State:save()
 
 	f.close()
 
+	log.verbose("state::save", "Saving from plugins.")
+
+	for _, plugin in State.plugins:iter() do
+		plugin.save(self)
+	end
+
 	log.verbose("state::save", "Done.")
 end
 
@@ -394,6 +405,12 @@ function load_state()
 		pkg.version = tonumber(pkg_version)
 
 		table.insert(state.installed, pkg)
+	end
+
+	log.verbose("state::plugins::load", "Loading from plugins.")
+
+	for _, plug in State.plugins:iter() do
+		plug.load(state)
 	end
 
 	log.verbose("state::load", "Done.")

@@ -1,5 +1,15 @@
 Package = {}
 
+Package.plugins = new(PluginRegistry, {
+	init = function() end,
+	update = function() end,
+	directives = function() end,
+	install = function() end,
+	remove = function() end,
+	load = function() end,
+	save = function() end,
+})
+
 -- Packages represent both a server-package as well as a
 -- package entry in the installed table.
 function Package:init(repo, name)
@@ -13,6 +23,7 @@ function Package:init(repo, name)
 		['config'] = {},
 		['startup'] = {},
 		['docs'] = {},
+		['acg-plugin'] = {},
 	}
 
 	self.steps = {
@@ -34,6 +45,10 @@ function Package:init(repo, name)
 	-- Legal Mumbo-Jumbo
 	self.license = "Unknown"
 	self.copyright = "Unknown"
+
+	for _, plugin in Package.plugins:iter() do
+		plugin.init(self)
+	end
 end
 
 function Package:get_url()
@@ -97,6 +112,12 @@ function Package:install(state)
 		install_all_spec('libraries', self.files['library'], 'lib', '.lua')
 		install_all_spec('config', self.files['config'], 'cfg', '')
 
+		install_all_spec('libraries', self.files['acg-plugin'], 'acg-plugin/', '.lua')
+
+		for _, plugin in Package.plugins:iter() do
+			plugin.install(self)
+		end
+
 		task:done("Installed " .. pkg.name)
 	end)
 
@@ -158,6 +179,12 @@ function Package:remove( state )
 	remove_all_spec('libraries', self.files['library'])
 	remove_all_spec('config', self.files['config'])
 
+	remove_all_spec('libraries', self.files['acg-plugin'])
+
+	for _, plugin in Package.plugins:iter() do
+		plugin.remove(self)
+	end
+
 	task:done("Removed " .. pkg.name)
 end
 
@@ -204,6 +231,7 @@ function Package:update()
 		['config'] = {},
 		['startup'] = {},
 		['docs'] = {},
+		['acg-plugin'] = {},
 	}
 
 	self.steps = {
@@ -225,6 +253,8 @@ function Package:update()
 	directives["Startup"] = function(value) table.insert(self.files['startup'], value) end
 	directives["Docs"] = function(value) table.insert(self.files['docs'], value) end
 
+	directives["ACG-Plugin"] = function(value) table.insert(self.files['acg-plugin'], value .. ' => acg/plugins/' .. self.name .. '-' .. value) end
+
 	-- Meta Data!
 
 	directives["Description"] = function(value) self.description = self.description .. value end
@@ -241,6 +271,18 @@ function Package:update()
 	directives["Pre-Remove"] = function(value) table.insert(self.steps.pre_remove, value) end
 	directives["Post-Remove"] = function(value) table.insert(self.steps.post_remove, value) end
 
+	-- Plugins!
+
+	for _, plugin in Package.plugins:iter() do
+		plugin.update(self)
+
+		for k, v in pairs(plugin.directives(directives)) do
+			directives[k] = v
+		end
+	end
+
+	-- Do ze things!
+
 	parse_manifest(self:get_url() .. '/details.pkg', directives)
 
 	if self.short_desc == "" then
@@ -249,7 +291,7 @@ function Package:update()
 end
 
 function Package:details()
-	return {
+	data = {
 		name = self.name,
 		version = self.version,
 		description = self.description,
@@ -260,6 +302,12 @@ function Package:details()
 		copyright = self.copyright,
 		steps = self.steps,
 	}
+
+	for _, plugin in Package.plugins do
+		plugin.save(self, data)
+	end
+
+	return data
 end
 
 function Package.from_details(repo, details)
@@ -283,6 +331,10 @@ function Package.from_details(repo, details)
 
 	if details.steps then
 		pkg.steps = details.steps
+	end
+
+	for _, plugin in Package.plugins do
+		plugin.load(self, details)
 	end
 
 	return pkg

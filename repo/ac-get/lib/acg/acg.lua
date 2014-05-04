@@ -25,7 +25,7 @@ if fs.exists('/ac-get-dirs') then
 end
 
 for _, fname in ipairs(fs.list(dirs['libraries'] .. '/acg/')) do
-	if fname ~= 'acg' then
+	if fname ~= 'acg' and fname ~= "plugins" then
 		dofile(dirs['libraries'] .. '/acg/' .. fname)
 	end
 end
