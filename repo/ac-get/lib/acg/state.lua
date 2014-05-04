@@ -1,10 +1,5 @@
 State = {}
 
-State.plugins = new(PluginRegistry, {
-	load = function() end,
-	save = function() end,
-})
-
 function State:init()
 	self.repos = {}
 	self.installed = {}
@@ -48,6 +43,10 @@ function State:run_manifest(url)
 	directives["Add-Repo"] = function(val) self:add_repo(val) end
 	directives["Install"] = function(val) self:install(val) end
 	directives["Run-Manifest"] = function(val) self:run_manifest(val) end
+
+	for _, plugin in PluginRegistry.state:iter() do
+		plugin.manifest(self, directives)
+	end
 
 	parse_manifest(url, directives)
 end
@@ -206,7 +205,7 @@ function State:save()
 
 	log.verbose("state::save", "Saving from plugins.")
 
-	for _, plugin in State.plugins:iter() do
+	for _, plugin in PluginRegistry.state:iter() do
 		plugin.save(self)
 	end
 
@@ -236,6 +235,14 @@ function State:pull_file(pkg, ftype, name, url)
 	buff = buff:gsub("__" .. "LIB" .. "__", dirs["libraries"])
 	buff = buff:gsub("__" .. "CFG" .. "__", dirs["config"])
 	buff = buff:gsub("__" .. "BIN" .. "__", dirs["binaries"])
+
+	for _, plugin in PluginRegistry.state:iter() do
+		new_buff = plugin.process(buff)
+
+		if new_buff ~= "" then
+			buff = new_buff
+		end
+	end
 
 	loc.write(buff)
 	loc.close()
@@ -409,7 +416,7 @@ function load_state()
 
 	log.verbose("state::plugins::load", "Loading from plugins.")
 
-	for _, plug in State.plugins:iter() do
+	for _, plug in PluginRegistry.state:iter() do
 		plug.load(state)
 	end
 

@@ -1,14 +1,15 @@
 -- lib-acg plugins registry
 
-PluginRegistry = {}
+-- This should be private.
+local Registry = {}
 
-function PluginRegistry:init(spec)
+function Registry:init(spec)
   self.plugs = {}
 
   self.spec = spec
 end
 
-function PluginRegistry:register(obj)
+function Registry:register(obj)
   local plug = {}
 
   for name, def in pairs(self.spec) do
@@ -22,6 +23,32 @@ function PluginRegistry:register(obj)
   table.insert(self.plugs, plug)
 end
 
-function PluginRegistry:iter()
+function Registry:iter()
   return ipairs(self.plugs)
 end
+
+-- Output the registry, though.
+
+PluginRegistry = {
+  package = new(Registry, {
+    init = function() end,
+    update = function() end,
+    directives = function() end,
+    install = function() end,
+    remove = function() end,
+    load = function() end,
+    save = function() end,
+  }),
+  state = new(Registry, {
+    load = function() end,
+    save = function() end,
+    manifest = function() end,
+    process = function(inp) return inp end,
+  }),
+  repo = new(Registry, {
+    init = function() end,
+    update = function() end,
+    load = function() end,
+    save = function() end,
+  }),
+}

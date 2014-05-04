@@ -1,15 +1,5 @@
 Package = {}
 
-Package.plugins = new(PluginRegistry, {
-	init = function() end,
-	update = function() end,
-	directives = function() end,
-	install = function() end,
-	remove = function() end,
-	load = function() end,
-	save = function() end,
-})
-
 -- Packages represent both a server-package as well as a
 -- package entry in the installed table.
 function Package:init(repo, name)
@@ -46,7 +36,7 @@ function Package:init(repo, name)
 	self.license = "Unknown"
 	self.copyright = "Unknown"
 
-	for _, plugin in Package.plugins:iter() do
+	for _, plugin in PluginRegisty.package:iter() do
 		plugin.init(self)
 	end
 end
@@ -114,7 +104,7 @@ function Package:install(state)
 
 		install_all_spec('libraries', self.files['acg-plugin'], 'acg-plugin/', '.lua')
 
-		for _, plugin in Package.plugins:iter() do
+		for _, plugin in PluginRegisty.package:iter() do
 			plugin.install(self)
 		end
 
@@ -181,7 +171,7 @@ function Package:remove( state )
 
 	remove_all_spec('libraries', self.files['acg-plugin'])
 
-	for _, plugin in Package.plugins:iter() do
+	for _, plugin in PluginRegisty.package:iter() do
 		plugin.remove(self)
 	end
 
@@ -273,7 +263,7 @@ function Package:update()
 
 	-- Plugins!
 
-	for _, plugin in Package.plugins:iter() do
+	for _, plugin in PluginRegisty.package:iter() do
 		plugin.update(self)
 
 		for k, v in pairs(plugin.directives(directives)) do
@@ -303,7 +293,7 @@ function Package:details()
 		steps = self.steps,
 	}
 
-	for _, plugin in Package.plugins do
+	for _, plugin in PluginRegisty.package do
 		plugin.save(self, data)
 	end
 
@@ -333,7 +323,7 @@ function Package.from_details(repo, details)
 		pkg.steps = details.steps
 	end
 
-	for _, plugin in Package.plugins do
+	for _, plugin in PluginRegisty.package do
 		plugin.load(self, details)
 	end
 
