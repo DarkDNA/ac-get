@@ -1,4 +1,5 @@
 example-program::1::A simple example program.
 example-startup::1::A simple example startup.
+example-plugin::1::A simple example ac-get plugin that makes it print "Bacon" on load.
 overly-attached-pkg::1::Step hooks example.
 lib-example::1::A simple example library.

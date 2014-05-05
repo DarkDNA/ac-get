@@ -31,25 +31,25 @@ end
 
 PluginRegistry = {
   package = new(Registry, {
-    init = function() end,
-    update = function() end,
-    directives = function() end,
-    install = function() end,
-    remove = function() end,
-    load = function() end,
-    save = function() end,
+    init = function(pkg) end,
+    update = function(pkg) end,
+    directives = function(pkg) end,
+    install = function(pkg) end,
+    remove = function(pkg) end,
+    load = function(pkg, details) end,
+    save = function(pkg, data) end,
   }),
   state = new(Registry, {
-    load = function() end,
-    save = function() end,
-    manifest = function() end,
+    load = function(state) end,
+    save = function(state) end,
+    manifest = function(state) end,
     process = function(inp) return inp end,
   }),
   repo = new(Registry, {
-    init = function() end,
-    update = function() end,
-    load = function() end,
-    save = function() end,
+    init = function(repo) end,
+    update = function(repo) end,
+    load = function(repo) end,
+    save = function(repo) end,
   }),
 }
 
@@ -61,7 +61,9 @@ end
 
 function PluginRegistry:reload()
   for _, plugins in pairs(self) do
-    plugins.plugs = {}
+    if type(plugins) == "table" then
+      plugins.plugs = {}
+    end
   end
 
   self:load()
