@@ -52,3 +52,17 @@ PluginRegistry = {
     save = function() end,
   }),
 }
+
+function PluginRegistry:load()
+  for _, plugin in ipairs(fs.list(dirs['libraries'] .. "/acg/plugins/")) do
+    dofile(dirs['libraries'] .. '/acg/plugins/' .. plugin)
+  end
+end
+
+function PluginRegistry:reload()
+  for _, plugins in pairs(self) do
+    plugins.plugs = {}
+  end
+
+  self:load()
+end

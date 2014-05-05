@@ -36,7 +36,7 @@ function Package:init(repo, name)
 	self.license = "Unknown"
 	self.copyright = "Unknown"
 
-	for _, plugin in PluginRegisty.package:iter() do
+	for _, plugin in PluginRegistry.package:iter() do
 		plugin.init(self)
 	end
 end
@@ -102,9 +102,11 @@ function Package:install(state)
 		install_all_spec('libraries', self.files['library'], 'lib', '.lua')
 		install_all_spec('config', self.files['config'], 'cfg', '')
 
-		install_all_spec('libraries', self.files['acg-plugin'], 'acg-plugin/', '.lua')
+		install_all_spec('libraries', self.files['acg-plugin'], 'acg-plugin', '.lua')
 
-		for _, plugin in PluginRegisty.package:iter() do
+		PluginRegistry:reload()
+
+		for _, plugin in PluginRegistry.package:iter() do
 			plugin.install(self)
 		end
 
@@ -171,7 +173,9 @@ function Package:remove( state )
 
 	remove_all_spec('libraries', self.files['acg-plugin'])
 
-	for _, plugin in PluginRegisty.package:iter() do
+	PluginRegistry:reload()
+
+	for _, plugin in PluginRegistry.package:iter() do
 		plugin.remove(self)
 	end
 
@@ -263,7 +267,7 @@ function Package:update()
 
 	-- Plugins!
 
-	for _, plugin in PluginRegisty.package:iter() do
+	for _, plugin in PluginRegistry.package:iter() do
 		plugin.update(self)
 
 		for k, v in pairs(plugin.directives(directives)) do
@@ -293,7 +297,7 @@ function Package:details()
 		steps = self.steps,
 	}
 
-	for _, plugin in PluginRegisty.package do
+	for _, plugin in PluginRegistry.package:iter() do
 		plugin.save(self, data)
 	end
 
@@ -323,7 +327,7 @@ function Package.from_details(repo, details)
 		pkg.steps = details.steps
 	end
 
-	for _, plugin in PluginRegisty.package do
+	for _, plugin in PluginRegistry.package:iter() do
 		plugin.load(self, details)
 	end
 

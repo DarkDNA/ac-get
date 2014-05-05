@@ -29,3 +29,5 @@ for _, fname in ipairs(fs.list(dirs['libraries'] .. '/acg/')) do
 		dofile(dirs['libraries'] .. '/acg/' .. fname)
 	end
 end
+
+PluginRegistry:load()
