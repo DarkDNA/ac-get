@@ -1,14 +1,14 @@
 VERSION = 0
 
 local default_dirs = {
-	["binaries"] = "/bin",
-	["libraries"] = "/lib",
-	["config"] = "/cfg",
-	["startup"] = "/cfg/startup.d",
-	["docs"] = "/docs/",
+	["binaries"] = "/ac-get/bin",
+	["libraries"] = "/ac-get/lib",
+	["config"] = "/settings",
+	["startup"] = "/ac-get/startup.d",
+	["docs"] = "/ac-get/docs/",
 	-- ac-get stuff.
-	["state"] = "/lib/ac-get",
-	["repo-state"] = "/lib/ac-get/repos"
+	["state"] = "/ac-get/state",
+	["repo-state"] = "/ac-get/state/repos"
 }
 
 dirs = default_dirs
