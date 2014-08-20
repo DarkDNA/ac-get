@@ -312,7 +312,7 @@ commands['search'] = {
 
 This command searches your installed repos for packages 
 matching the given criteria. The criteria is currently
-parsed as a lua regulat expression.]],
+parsed as a lua regular expression.]],
   usage = '<term>',
   run = function(state, args)
 
