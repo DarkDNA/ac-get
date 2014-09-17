@@ -1,9 +1,22 @@
 <div id="sidebar">
 	<img id="logo" src="/images/logo.png">
 	<ul id="menu">
-		<li><a href="/index.html">Home Page</a></li>
-		<li><a href="/download.html">Download</a></li>
-		<li><a href="/contact.html">Contact Us</a></li>
+		{{ $body := . }}
+		{{ range .Site.Menus.main }}
+		<li {{ if $body.IsMenuCurrent "main" . }} class="active" {{end}}>
+			<a href="{{.Url}}">{{ .Name }}</a>
+			{{ if .HasChildren }}
+			<ul class="submenu">
+			{{ range .Children }}
+				<li {{if $body.IsMenuCurrent "main" . }} class="active" {{end}}>
+					<a href="{{.Url}}">{{.Name}}</a>
+				</li>
+			{{ end }}
+			</ul>
+			{{end}}
+		</li>
+		{{ end }}
+
 		<li class="section-header"><span>Documentation</span></li>
 		{{ range $key, $value := .Site.Indexes.groups.docs.Pages }}
 		<li><a href="{{ $value.RelPermalink }}" data-version="{{$value.Params.v_added}}">{{ $value.Title }}</a></li>

@@ -1,5 +1,12 @@
 uglyurls: true
 canonifyurls: false
+permalinks:
+  pages: /:title/
+menu:
+  main:
+    - Name: "Updates"
+      Url: "/"
+      Weight: -100
 indexes:
   tag: 'tags'
   group: 'groups'

@@ -1,5 +1,8 @@
 ---
 title: Download
+menu: main
+aliases:
+  - /download.html
 ---
 
 You have two download options to download ac-get, listed below:

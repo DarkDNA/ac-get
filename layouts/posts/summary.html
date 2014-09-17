@@ -1,0 +1,9 @@
+<article>
+  <header>
+    <a href="{{.RelPermalink}}" class="title">{{.Title}} {{ if .Draft }}<span class="draft">:: Draft</span>{{ end }}</a>
+  </header>
+  <div class="summary">{{ .Content }}</div>
+  <footer>
+    <span class="date">Posted {{ .Date.Format "2006-01-02" }} by {{ .Params.author }}.</span>
+  </footer>
+</article>
