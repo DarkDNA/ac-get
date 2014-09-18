@@ -169,8 +169,6 @@ function State:get_installed(pkg_name)
 	for _, pkg in ipairs(self.installed) do
 		if pkg.name == pkg_name then
 			return pkg
-		else
-			sleep(0)
 		end
 	end
 
@@ -309,7 +307,6 @@ function State:get_packages()
 			pkgs[pkg.name] = pkg
 		end
 	end
-
 
 	self._packages = pkgs
 
