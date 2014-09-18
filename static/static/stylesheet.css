@@ -1,4 +1,47 @@
 
+/* Blag */
+
+article {
+	width: 80%;
+	border: 1px solid black;
+	border-radius: .25em;
+	margin-bottom: .75em;
+}
+
+article > header {
+	border-bottom: 1px solid black;
+	padding: .25em;
+}
+
+article > footer {
+	font-size: 90%;
+	padding: .25em;
+}
+
+header > a.title {
+	font-size: 150%;
+
+	font-weight: bold;
+	text-decoration: none;
+	color: black;
+}
+
+footer > span.date {
+
+}
+
+article > div.summary {
+	border-bottom: 1px solid black;
+
+	padding: .5em;
+	background: #EEE;
+}
+
+a.title > span.draft {
+	color: #888;
+}
+
+
 /* Header. */
 
 div#header {
