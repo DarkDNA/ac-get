@@ -1,3 +1,9 @@
+---
+title: Beta Testing
+aliases:
+  - /beta-tester.html
+---
+
 Want to help make ac-get better? Great!
 
 Beta testers are welcome to use this, however be forwarned that **Things WILL change** and that **This COULD brick your ac-get setup**
