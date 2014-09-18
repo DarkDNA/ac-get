@@ -1,3 +1,5 @@
+-- lint-mode: ac-get
+
 State = {}
 
 function State:init()
@@ -108,7 +110,7 @@ function State:do_install_package(pkg)
 
 	if not ok then
 		pkg:remove(self)
-		
+
 		return false, "Error installing " .. pkg.name .. ": " .. err
 	end
 
@@ -182,7 +184,7 @@ function State:save()
 
 	f.write(VERSION .. "\n")
 
-	f.write(self.repo_hash .. "\n") 
+	f.write(self.repo_hash .. "\n")
 
 	for hash, repo in pairs(self.repos) do
 		f.write(hash .. '::' .. repo.url .. '\n')
@@ -226,7 +228,7 @@ function State:pull_file(pkg, ftype, name, url)
 
 	local loc = fs.open(name, 'w')
 
-	buff = remote.readAll() .. ""
+	local buff = remote.readAll() .. ""
 
 	sleep(0)
 
@@ -235,7 +237,7 @@ function State:pull_file(pkg, ftype, name, url)
 	buff = buff:gsub("__" .. "BIN" .. "__", dirs["binaries"])
 
 	for _, plugin in PluginRegistry.state:iter() do
-		new_buff = plugin.process(buff)
+		local new_buff = plugin.process(buff)
 
 		if new_buff ~= "" then
 			buff = new_buff
@@ -290,7 +292,7 @@ function State:get_packages()
 		for _, pkg in ipairs(repo.packages) do
 			if pkgs[pkg.name] and pkgs[pkg.name].version < pkg.version then
 				pkgs[pkg.name] = pkg
-			elseif not pkgs[pkg_name] then
+			elseif not pkgs[pkg.name] then
 				pkgs[pkg.name] = pkg
 			end
 		end
@@ -380,7 +382,7 @@ function load_state()
 
 		local repo = new(Repo, state, line:sub(#id + 3), 'Loading...')
 		repo.hash = tonumber(id)
-		
+
 		sleep(0)
 		repo:load()
 		sleep(0)

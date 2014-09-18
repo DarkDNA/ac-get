@@ -1,4 +1,5 @@
 -- lib-acg plugins registry
+-- lint-mode: ac-get
 
 -- This should be private.
 local Registry = {}

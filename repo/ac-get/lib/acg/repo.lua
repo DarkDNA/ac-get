@@ -1,3 +1,5 @@
+-- lint-mode: ac-get
+
 Repo = {}
 
 function Repo:init(state, url, desc)
@@ -29,7 +31,7 @@ function Repo:install_package(name)
 	for _, pkg in ipairs(self.packages) do
 		if pkg.name == name then
 			self.state:do_install_package(pkg)
-			
+
 			return
 		else
 			sleep()

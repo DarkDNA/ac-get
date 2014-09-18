@@ -1,3 +1,5 @@
+-- lint-mode: ac-get
+
 Package = {}
 
 -- Packages represent both a server-package as well as a
@@ -62,7 +64,7 @@ function Package:install(state)
 
 			task:update("Installing " .. file, start + i)
 
-			state:pull_file(pkg, type, 
+			state:pull_file(pkg, type,
 				file,
 				pkg:get_url() .. '/' .. path .. '/' .. file .. ext)
 		end
@@ -78,11 +80,11 @@ function Package:install(state)
 				self.log:verbose("Creating directory " .. file)
 
 				task:update("Creating " .. file, start + i)
-				
+
 				state:make_dir(pkg, type, file)
 			else
 				local source, dest = pkg:parse_dest(file)
-		
+
 				self.log:verbose("Installing file " .. dest)
 
 				task:update("Installing " .. dest, start + i)
@@ -185,7 +187,7 @@ end
 function Package:run_step(state, step, ...)
 	--log.verbose('package::' .. step, 'Beginning...')
 	self.log:verbose("Beginning Step " .. step)
-	
+
 	for _, script in ipairs(self.steps[step]) do
 		local scr = get_url_safe(self.repo.url .. "/" .. self.name .. "/steps/" .. step .. "/" .. script .. ".lua")
 
@@ -285,7 +287,7 @@ function Package:update()
 end
 
 function Package:details()
-	data = {
+	local data = {
 		name = self.name,
 		version = self.version,
 		description = self.description,
@@ -328,7 +330,7 @@ function Package.from_details(repo, details)
 	end
 
 	for _, plugin in PluginRegistry.package:iter() do
-		plugin.load(self, details)
+		plugin.load(pkg, details)
 	end
 
 	return pkg

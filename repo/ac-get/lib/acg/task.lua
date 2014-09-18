@@ -1,3 +1,5 @@
+-- lint-mode: ac-get
+
 Task = {}
 
 function Task:init(state, id, steps)
