@@ -1,3 +1,6 @@
+-- lint-mode: ac-get
+-- lint-ignore-global-set: VERSION,dirs
+
 VERSION = 0
 
 dirs = {}
