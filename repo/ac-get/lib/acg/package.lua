@@ -1,3 +1,5 @@
+-- lint-mode: ac-get
+
 Package = {}
 
 -- Packages represent both a server-package as well as a
@@ -13,6 +15,7 @@ function Package:init(repo, name)
 		['config'] = {},
 		['startup'] = {},
 		['docs'] = {},
+		['acg-plugin'] = {},
 	}
 
 	self.steps = {
@@ -34,6 +37,10 @@ function Package:init(repo, name)
 	-- Legal Mumbo-Jumbo
 	self.license = "Unknown"
 	self.copyright = "Unknown"
+
+	for _, plugin in PluginRegistry.package:iter() do
+		plugin.init(self)
+	end
 end
 
 function Package:get_url()
@@ -57,7 +64,7 @@ function Package:install(state)
 
 			task:update("Installing " .. file, start + i)
 
-			state:pull_file(pkg, type, 
+			state:pull_file(pkg, type,
 				file,
 				pkg:get_url() .. '/' .. path .. '/' .. file .. ext)
 		end
@@ -73,11 +80,11 @@ function Package:install(state)
 				self.log:verbose("Creating directory " .. file)
 
 				task:update("Creating " .. file, start + i)
-				
+
 				state:make_dir(pkg, type, file)
 			else
 				local source, dest = pkg:parse_dest(file)
-		
+
 				self.log:verbose("Installing file " .. dest)
 
 				task:update("Installing " .. dest, start + i)
@@ -96,6 +103,14 @@ function Package:install(state)
 
 		install_all_spec('libraries', self.files['library'], 'lib', '.lua')
 		install_all_spec('config', self.files['config'], 'cfg', '')
+
+		install_all_spec('libraries', self.files['acg-plugin'], 'acg-plugin', '.lua')
+
+		PluginRegistry:reload()
+
+		for _, plugin in PluginRegistry.package:iter() do
+			plugin.install(self)
+		end
 
 		task:done("Installed " .. pkg.name)
 	end)
@@ -158,13 +173,21 @@ function Package:remove( state )
 	remove_all_spec('libraries', self.files['library'])
 	remove_all_spec('config', self.files['config'])
 
+	remove_all_spec('libraries', self.files['acg-plugin'])
+
+	PluginRegistry:reload()
+
+	for _, plugin in PluginRegistry.package:iter() do
+		plugin.remove(self)
+	end
+
 	task:done("Removed " .. pkg.name)
 end
 
 function Package:run_step(state, step, ...)
 	--log.verbose('package::' .. step, 'Beginning...')
 	self.log:verbose("Beginning Step " .. step)
-	
+
 	for _, script in ipairs(self.steps[step]) do
 		local scr = get_url_safe(self.repo.url .. "/" .. self.name .. "/steps/" .. step .. "/" .. script .. ".lua")
 
@@ -204,6 +227,7 @@ function Package:update()
 		['config'] = {},
 		['startup'] = {},
 		['docs'] = {},
+		['acg-plugin'] = {},
 	}
 
 	self.steps = {
@@ -225,6 +249,8 @@ function Package:update()
 	directives["Startup"] = function(value) table.insert(self.files['startup'], value) end
 	directives["Docs"] = function(value) table.insert(self.files['docs'], value) end
 
+	directives["ACG-Plugin"] = function(value) table.insert(self.files['acg-plugin'], value .. ' => acg/plugins/' .. self.name .. '-' .. value) end
+
 	-- Meta Data!
 
 	directives["Description"] = function(value) self.description = self.description .. value end
@@ -241,6 +267,18 @@ function Package:update()
 	directives["Pre-Remove"] = function(value) table.insert(self.steps.pre_remove, value) end
 	directives["Post-Remove"] = function(value) table.insert(self.steps.post_remove, value) end
 
+	-- Plugins!
+
+	for _, plugin in PluginRegistry.package:iter() do
+		plugin.update(self)
+
+		for k, v in pairs(plugin.directives(directives)) do
+			directives[k] = v
+		end
+	end
+
+	-- Do ze things!
+
 	parse_manifest(self:get_url() .. '/details.pkg', directives)
 
 	if self.short_desc == "" then
@@ -249,7 +287,7 @@ function Package:update()
 end
 
 function Package:details()
-	return {
+	local data = {
 		name = self.name,
 		version = self.version,
 		description = self.description,
@@ -260,6 +298,12 @@ function Package:details()
 		copyright = self.copyright,
 		steps = self.steps,
 	}
+
+	for _, plugin in PluginRegistry.package:iter() do
+		plugin.save(self, data)
+	end
+
+	return data
 end
 
 function Package.from_details(repo, details)
@@ -283,6 +327,10 @@ function Package.from_details(repo, details)
 
 	if details.steps then
 		pkg.steps = details.steps
+	end
+
+	for _, plugin in PluginRegistry.package:iter() do
+		plugin.load(pkg, details)
 	end
 
 	return pkg

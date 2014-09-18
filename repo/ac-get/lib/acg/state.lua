@@ -1,3 +1,5 @@
+-- lint-mode: ac-get
+
 State = {}
 
 function State:init()
@@ -43,6 +45,10 @@ function State:run_manifest(url)
 	directives["Add-Repo"] = function(val) self:add_repo(val) end
 	directives["Install"] = function(val) self:install(val) end
 	directives["Run-Manifest"] = function(val) self:run_manifest(val) end
+
+	for _, plugin in PluginRegistry.state:iter() do
+		plugin.manifest(self, directives)
+	end
 
 	parse_manifest(url, directives)
 end
@@ -104,7 +110,7 @@ function State:do_install_package(pkg)
 
 	if not ok then
 		pkg:remove(self)
-		
+
 		return false, "Error installing " .. pkg.name .. ": " .. err
 	end
 
@@ -178,7 +184,7 @@ function State:save()
 
 	f.write(VERSION .. "\n")
 
-	f.write(self.repo_hash .. "\n") 
+	f.write(self.repo_hash .. "\n")
 
 	for hash, repo in pairs(self.repos) do
 		f.write(hash .. '::' .. repo.url .. '\n')
@@ -196,6 +202,12 @@ function State:save()
 	end
 
 	f.close()
+
+	log.verbose("state::save", "Saving from plugins.")
+
+	for _, plugin in PluginRegistry.state:iter() do
+		plugin.save(self)
+	end
 
 	log.verbose("state::save", "Done.")
 end
@@ -216,13 +228,21 @@ function State:pull_file(pkg, ftype, name, url)
 
 	local loc = fs.open(name, 'w')
 
-	buff = remote.readAll() .. ""
+	local buff = remote.readAll() .. ""
 
 	sleep(0)
 
 	buff = buff:gsub("__" .. "LIB" .. "__", dirs["libraries"])
 	buff = buff:gsub("__" .. "CFG" .. "__", dirs["config"])
 	buff = buff:gsub("__" .. "BIN" .. "__", dirs["binaries"])
+
+	for _, plugin in PluginRegistry.state:iter() do
+		local new_buff = plugin.process(buff)
+
+		if new_buff ~= "" then
+			buff = new_buff
+		end
+	end
 
 	loc.write(buff)
 	loc.close()
@@ -272,7 +292,7 @@ function State:get_packages()
 		for _, pkg in ipairs(repo.packages) do
 			if pkgs[pkg.name] and pkgs[pkg.name].version < pkg.version then
 				pkgs[pkg.name] = pkg
-			elseif not pkgs[pkg_name] then
+			elseif not pkgs[pkg.name] then
 				pkgs[pkg.name] = pkg
 			end
 		end
@@ -362,7 +382,7 @@ function load_state()
 
 		local repo = new(Repo, state, line:sub(#id + 3), 'Loading...')
 		repo.hash = tonumber(id)
-		
+
 		sleep(0)
 		repo:load()
 		sleep(0)
@@ -391,6 +411,12 @@ function load_state()
 		pkg.version = tonumber(pkg_version)
 
 		table.insert(state.installed, pkg)
+	end
+
+	log.verbose("state::plugins::load", "Loading from plugins.")
+
+	for _, plug in PluginRegistry.state:iter() do
+		plug.load(state)
 	end
 
 	log.verbose("state::load", "Done.")

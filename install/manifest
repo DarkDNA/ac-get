@@ -6,3 +6,4 @@ package.lua
 repo.lua
 state.lua
 task.lua
+plugin-registry.lua

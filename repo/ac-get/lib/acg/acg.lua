@@ -15,7 +15,9 @@ end
 f.close()
 
 for _, fname in ipairs(fs.list(dirs['libraries'] .. '/acg/')) do
-	if fname ~= 'acg' and fname ~= 'dirs' then
+	if fname ~= 'acg' and fname ~= 'dirs' and fname ~= 'plugins' then
 		dofile(dirs['libraries'] .. '/acg/' .. fname)
 	end
 end
+
+PluginRegistry:load()

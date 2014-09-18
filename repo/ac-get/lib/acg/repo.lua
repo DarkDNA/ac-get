@@ -1,3 +1,5 @@
+-- lint-mode: ac-get
+
 Repo = {}
 
 function Repo:init(state, url, desc)
@@ -10,6 +12,10 @@ function Repo:init(state, url, desc)
 	self.dev_mode = false
 
 	self.packages = {}
+
+	for _, plugin in PluginRegistry.repo:iter() do
+		plugin.init(self)
+	end
 end
 
 function Repo:has_package(name)
@@ -25,7 +31,7 @@ function Repo:install_package(name)
 	for _, pkg in ipairs(self.packages) do
 		if pkg.name == name then
 			self.state:do_install_package(pkg)
-			
+
 			return
 		else
 			sleep()
@@ -121,6 +127,10 @@ function Repo:load()
 	self.desc = f.readAll()
 
 	self.dev_mode = fs.exists(dirs['repo-state'] .. '/' .. self.hash .. '-dev_mode')
+
+	for _, plugin in PluginRegistry.repo:iter() do
+		plugin.load(self)
+	end
 
 	f.close()
 end
