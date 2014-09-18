@@ -1,6 +1,5 @@
 ---
 title: Repository Format
-groups: [ "docs" ]
 ---
 
 # Overview #
@@ -30,7 +29,7 @@ still a requirement for future expansion.
 # Package Format #
 
 Packages reside under the repository's directory, for the above example of packages.list, the tree would
-look like this: 
+look like this:
 
   * foo/
     * details.pkg
@@ -87,7 +86,7 @@ The following are under consideration for addition, and there's no harm in using
 ### Script Directives ###
 Script Directives are run at specific steps in the package's life-cycle. In order to do things that normally the install/remove/upgrade cycle can't. The ac-get package itself uses this for installing the startup script launcher. These are to be placed in the details.pkg alondside the above directives. The scripts themselves all go inside their respective directive names in the `steps` sub-directory,  with the `-` replaced with a `_` and the name made all-lowercase. For instance, a Pre-Install directive's script would go under `steps/pre_install/foo-script.lua`.
 
-Examples of these can be seen in the `overly-attached-pkg` package in the above example repo download. 
+Examples of these can be seen in the `overly-attached-pkg` package in the above example repo download.
 
 | Name |Args | Desc |
 |------|-----|------|

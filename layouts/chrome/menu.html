@@ -18,7 +18,7 @@
 		{{ end }}
 
 		<li class="section-header"><span>Documentation</span></li>
-		{{ range $key, $value := .Site.Indexes.groups.docs.Pages }}
+		{{ range $key, $value := (where .Site.Pages "Section" "docs") }}
 		<li><a href="{{ $value.RelPermalink }}" data-version="{{$value.Params.v_added}}">{{ $value.Title }}</a></li>
 		{{ end }}
 	</li>

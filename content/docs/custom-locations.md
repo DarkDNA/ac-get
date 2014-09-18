@@ -1,6 +1,5 @@
 ---
 title: Custom Locations
-groups: [ "docs" ]
 ---
 
 To install program files to custom locations on the filesystem, you must first make a file in your root
