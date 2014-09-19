@@ -13,7 +13,9 @@ Library: acg/task
 Library: acg/plugin-registry
 Library: acg/plugins/
 Post-Install: add-startup
+Post-Install: add-dirs
 Post-Upgrade: upgrade-startup
+Post-Upgrade: add-dirs
 Startup: 00-add-paths
 License: MIT License
 Copyright: CC-by-2.0 Attribution
